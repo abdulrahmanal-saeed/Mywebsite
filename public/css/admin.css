@@ -80,7 +80,20 @@ input[type=file] { font: inherit; font-weight: 400; font-size: 14px; }
 .check input { width: 18px; height: 18px; accent-color: var(--navy); }
 .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
 .upload { display: grid; gap: 12px; align-content: start; padding: 16px; border: 1px dashed var(--line); border-radius: 10px; }
-.upload__preview { width: 120px; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); }
+.upload__preview { width: 140px; height: 140px; object-fit: cover; border-radius: 14px; border: 1px solid var(--line); }
+.upload__preview.is-circle { border-radius: 50%; }
+.upload .btn { justify-self: start; }
+.shape { border: 0; padding: 0; margin: 0; display: flex; gap: 18px; flex-wrap: wrap; }
+.shape legend { font-weight: 600; font-size: 14px; color: var(--ink-2); margin-bottom: 6px; padding: 0; }
+.cropper { display: grid; gap: 10px; padding: 14px; border-radius: 10px; background: #faf8f3; border: 1px solid var(--line); }
+.cropper[hidden] { display: none; }
+.cropper__stage { width: 100%; max-width: 320px; }
+.cropper__stage canvas { width: 100%; height: auto; aspect-ratio: 1; display: block; border-radius: 10px; background: #222; cursor: grab; touch-action: none; }
+.cropper__stage canvas:active { cursor: grabbing; }
+.cropper__zoom { display: flex; align-items: center; gap: 10px; }
+.cropper__zoom input { flex: 1; accent-color: var(--navy); }
+.cropper__actions { display: flex; gap: 10px; }
+.crop-note { color: var(--ok); font-weight: 500; }
 .upload__file { display: grid; gap: 4px; }
 .savebar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; bottom: 0; padding: 14px 0; background: linear-gradient(transparent, var(--bg) 30%); }
 .savebar form { margin: 0; }

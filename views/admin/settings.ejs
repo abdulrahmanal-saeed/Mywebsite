@@ -23,9 +23,25 @@
   <section class="panel">
     <h2>Photo & CV file</h2>
     <div class="grid-2">
-      <div class="upload">
-        <img src="<%= photo %>" alt="Current profile photo" class="upload__preview" data-preview="photo">
-        <label>Profile photo <span class="help">JPG, PNG or WebP, max 8 MB. A portrait (vertical) photo looks best.</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-preview-input="photo"></label>
+      <div class="upload" data-photo-editor>
+        <img src="<%= photo %>" alt="Current profile photo" class="upload__preview<%= s.photo_shape === 'square' ? '' : ' is-circle' %>" data-preview="photo">
+        <fieldset class="shape">
+          <legend>Photo shape on the website</legend>
+          <label class="check"><input type="radio" name="photo_shape" value="circle" <%= s.photo_shape !== 'square' ? 'checked' : '' %>> Circle</label>
+          <label class="check"><input type="radio" name="photo_shape" value="square" <%= s.photo_shape === 'square' ? 'checked' : '' %>> Square</label>
+        </fieldset>
+        <label>Upload a new photo <span class="help">JPG, PNG or WebP, max 8 MB. You can crop it right after choosing it.</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-crop-input></label>
+        <button type="button" class="btn btn--ghost btn--sm" data-crop-current="<%= photo %>">Crop current photo</button>
+        <div class="cropper" data-cropper hidden>
+          <p class="small muted">Drag the photo to move it. Use the slider to zoom.</p>
+          <div class="cropper__stage"><canvas width="320" height="320" aria-label="Crop area"></canvas></div>
+          <label class="cropper__zoom">Zoom<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom></label>
+          <div class="cropper__actions">
+            <button type="button" class="btn btn--primary btn--sm" data-crop-apply>Use this crop</button>
+            <button type="button" class="btn btn--ghost btn--sm" data-crop-cancel>Cancel</button>
+          </div>
+        </div>
+        <p class="small crop-note" data-crop-note hidden>Cropped ✓ Click <strong>Save changes</strong> at the bottom to publish it.</p>
         <% if (s.photo_asset) { %><label class="check"><input type="checkbox" name="remove_photo" value="1"> Use the original photo instead</label><% } %>
       </div>
       <div class="upload">

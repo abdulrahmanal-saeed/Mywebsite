@@ -24,6 +24,7 @@ const SETTINGS = {
   show_certifications: '1',
   show_contact: '1',
   photo_asset: '',
+  photo_shape: 'circle',
   cv_asset: '',
 };
 

@@ -146,6 +146,7 @@ router.post(
     const values = {};
     for (const f of SETTING_FIELDS) values[f] = String(b[f] ?? '').trim();
     for (const f of SETTING_FLAGS) values[f] = b[f] ? '1' : '0';
+    values.photo_shape = b.photo_shape === 'square' ? 'square' : 'circle';
     values.whatsapp = values.whatsapp.replace(/[^\d]/g, '');
     if (values.linkedin && !/^https?:\/\//i.test(values.linkedin)) values.linkedin = `https://${values.linkedin}`;
     if (!values.full_name) return res.redirect(withNotice('/admin/settings', 'Error: Name is required.'));

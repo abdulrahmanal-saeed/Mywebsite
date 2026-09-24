@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/site.css?v=1">
+  <link rel="stylesheet" href="/css/site.css?v=2">
   <script type="application/ld+json"><%- JSON.stringify(jsonLd).replace(/</g, '\\u003c') %></script>
 </head>
 <body>
@@ -88,8 +88,8 @@
             <% if (s.linkedin) { %><li><a href="<%= s.linkedin %>" target="_blank" rel="noopener"><%- icon('linkedin', 16) %> LinkedIn</a></li><% } %>
           </ul>
         </div>
-        <figure class="hero__photo">
-          <img src="<%= photo %>" alt="Portrait of <%= s.full_name %>" width="520" height="620" fetchpriority="high">
+        <figure class="hero__photo<%= s.photo_shape === 'circle' ? ' hero__photo--circle' : '' %>">
+          <div class="hero__frame"><img src="<%= photo %>" alt="Portrait of <%= s.full_name %>" width="320" height="320" fetchpriority="high"></div>
           <% if (current) { %>
             <figcaption class="hero__badge">
               <span class="hero__badge-label">Currently</span>
