@@ -42,14 +42,21 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 // Until the database is ready, explain what is wrong instead of crashing.
 let ready = false;
 let startupError = null;
+let markReady;
+const readyPromise = new Promise((resolve) => (markReady = resolve));
 app.get('/healthz', (req, res) => res.status(ready ? 200 : 503).json({ ready, error: startupError }));
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   if (ready) return next();
+  // After a cold start the database needs a moment: hold the request instead of showing a page.
+  if (!startupError) {
+    await Promise.race([readyPromise, new Promise((r) => setTimeout(r, 25000))]);
+    if (ready) return next();
+  }
   res
     .status(503)
     .type('html')
     .send(
-      `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Starting…</title>` +
+      `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="refresh" content="5"><title>Starting…</title>` +
         `<body style="font-family:system-ui,sans-serif;max-width:640px;margin:60px auto;padding:0 16px;line-height:1.6">` +
         `<h1 style="font-size:22px">The website is starting up</h1>` +
         (startupError
@@ -83,10 +90,12 @@ async function init() {
     await ensureAdmin();
     ready = true;
     startupError = null;
+    markReady();
     console.log('[db] Ready');
   } catch (err) {
     startupError = `${err.code || err.name}: ${err.message}\n${describeDbSettings()}`;
     console.error('[db] Startup failed, retrying in 15s:', startupError);
+    markReady(); // stop holding requests; they get the error page instead
     setTimeout(init, 15000);
   }
 }

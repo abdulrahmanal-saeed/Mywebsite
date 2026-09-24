@@ -121,9 +121,7 @@ const SCHEMA = [
 ];
 
 async function migrate() {
-  for (const sql of SCHEMA) {
-    await query(sql + ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
-  }
+  await Promise.all(SCHEMA.map((sql) => query(sql + ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4')));
 }
 
 module.exports = { getPool, query, one, migrate };

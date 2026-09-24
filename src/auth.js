@@ -4,7 +4,7 @@ const { query, one } = require('./db');
 
 const COOKIE = 'admin_session';
 // Used to spend the same time on unknown emails as on real ones.
-const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
+let dummyHash;
 const MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
 
 // Without SESSION_SECRET a random one is used, so logins reset on every restart.
@@ -85,7 +85,8 @@ async function verifyLogin(email, password) {
     String(email || '').trim().toLowerCase(),
   ]);
   if (!user) {
-    await bcrypt.compare(String(password || ''), DUMMY_HASH);
+    dummyHash = dummyHash || (await bcrypt.hash('not-a-real-password', 12));
+    await bcrypt.compare(String(password || ''), dummyHash);
     return null;
   }
   return (await bcrypt.compare(String(password || ''), user.password_hash)) ? user : null;
