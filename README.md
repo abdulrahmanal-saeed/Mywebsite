@@ -18,7 +18,7 @@ Stack: Node.js (Express) + EJS + MySQL. No build step.
 
 ### 2) (Recommended) Create an email for the contact form
 To get website messages in your Gmail:
-1. hPanel → **Emails** → create a mailbox such as `contact@abdulrahmanalsaeed.com`.
+1. hPanel → **Emails** → create a mailbox such as `info@abdulrahmanalsaeed.com`.
 2. The site sends from this mailbox to `abdulrahmanalsaeed5@gmail.com`.
 
 > If you skip this step, messages are still saved in the admin panel under **Messages**.
@@ -51,7 +51,7 @@ In the Node.js app settings → **Environment variables**, add:
 | `SESSION_SECRET` | long random text, e.g. 40 random letters and numbers |
 | `SMTP_HOST` | `smtp.hostinger.com` |
 | `SMTP_PORT` | `465` |
-| `SMTP_USER` | `contact@abdulrahmanalsaeed.com` |
+| `SMTP_USER` | `info@abdulrahmanalsaeed.com` |
 | `SMTP_PASSWORD` | mailbox password |
 | `CONTACT_TO` | `abdulrahmanalsaeed5@gmail.com` |
 
