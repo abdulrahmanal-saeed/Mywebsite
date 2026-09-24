@@ -6,7 +6,7 @@ const SETTINGS = {
   tagline:
     'I build long-term client relationships and turn them into revenue: 5+ years across the UAE and Egypt in corporate sales, account development and client-facing leadership.',
   location: 'Dubai, UAE',
-  email: 'abdulrahmanalsaeed5@gmail.com',
+  email: 'info@abdulrahmanalsaeed.com',
   phone: '+971 52 311 3472',
   whatsapp: '971504085666',
   linkedin: 'https://www.linkedin.com/in/abdulrahmanalsaeed5',
