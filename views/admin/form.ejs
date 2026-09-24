@@ -1,0 +1,33 @@
+<% const isNew = !item.id; %>
+<%- include('_top', { title: (isNew ? 'Add ' : 'Edit ') + col.singular.toLowerCase() }) %>
+<% const hasFile = col.fields.some((f) => f.type === 'file'); %>
+<form method="post" action="/admin/<%= col.key %><%= isNew ? '' : '/' + item.id %>" class="stack" <%- hasFile ? 'enctype="multipart/form-data"' : '' %>>
+  <section class="panel">
+    <% if (errors.length) { %>
+      <div class="notice notice--error" role="alert"><% errors.forEach((e) => { %><div><%= e %></div><% }) %></div>
+    <% } %>
+    <% col.fields.forEach((f) => { const v = item[f.name]; %>
+      <% if (f.type === 'checkbox') { %>
+        <label class="check"><input type="checkbox" name="<%= f.name %>" value="1" <%= Number(v) ? 'checked' : '' %>> <%= f.label %></label>
+      <% } else if (f.type === 'textarea' || f.type === 'lines') { %>
+        <label><%= f.label %><% if (f.help) { %> <span class="help"><%= f.help %></span><% } %>
+          <textarea name="<%= f.name %>" rows="<%= f.type === 'lines' ? 8 : 4 %>"<%= f.required ? ' required' : '' %>><%= v || '' %></textarea></label>
+      <% } else if (f.type === 'file') { %>
+        <div class="upload">
+          <% if (v) { %><p class="small">Current file: <a href="/media/<%= v %>" target="_blank" rel="noopener">open ↗</a></p><% } %>
+          <label><%= f.label %> <span class="help">Max 8 MB.</span><input type="file" name="<%= f.name %>" accept="<%= f.accept %>"></label>
+          <% if (v) { %><label class="check"><input type="checkbox" name="remove_<%= f.name %>" value="1"> Remove current file</label><% } %>
+        </div>
+      <% } else { %>
+        <label><%= f.label %><% if (f.help) { %> <span class="help"><%= f.help %></span><% } %>
+          <input type="<%= f.type === 'url' ? 'url' : 'text' %>" name="<%= f.name %>" value="<%= v || '' %>"<%= f.required ? ' required' : '' %><% if (f.placeholder) { %> placeholder="<%= f.placeholder %>"<% } %><% if (f.list) { %> list="<%= f.list %>"<% } %>></label>
+        <% if (f.list) { %><datalist id="<%= f.list %>"><% f.options.forEach((o) => { %><option value="<%= o %>"><% }) %></datalist><% } %>
+      <% } %>
+    <% }) %>
+  </section>
+  <div class="savebar">
+    <button class="btn btn--primary" type="submit"><%= isNew ? 'Add' : 'Save changes' %></button>
+    <a href="/admin/<%= col.key %>" class="small">Cancel</a>
+  </div>
+</form>
+<%- include('_bottom') %>

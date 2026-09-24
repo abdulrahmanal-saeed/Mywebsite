@@ -1,0 +1,19 @@
+<%- include('_top', { title: 'Messages' }) %>
+<section class="panel">
+  <% if (!messages.length) { %>
+    <p class="empty">No messages yet. When someone uses the contact form on your website, it appears here.</p>
+  <% } else { %>
+    <ul class="msglist msglist--full">
+      <% messages.forEach((m) => { %>
+        <li class="<%= m.is_read ? '' : 'is-unread' %>">
+          <a href="/admin/messages/<%= m.id %>">
+            <strong><%= m.name %><% if (m.company) { %> <span class="muted">· <%= m.company %></span><% } %></strong>
+            <span><%= m.subject || m.body.slice(0, 90) %></span>
+            <time><%= m.created_at.slice(0, 16) %></time>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>
+<%- include('_bottom') %>

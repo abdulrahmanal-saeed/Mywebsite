@@ -1,0 +1,46 @@
+<%- include('_top', { title: col.title, actions: `<a class="btn btn--primary" href="/admin/${col.key}/new">+ Add ${col.singular.toLowerCase()}</a>` }) %>
+<% const fieldLabel = (n) => (col.fields.find((f) => f.name === n) || { label: n }).label; %>
+<section class="panel">
+  <% if (col.hint) { %><p class="muted small"><%= col.hint %> Use ↑ ↓ to change the order.</p><% } %>
+  <% if (!items.length) { %>
+    <p class="empty">Nothing here yet. <a href="/admin/<%= col.key %>/new">Add the first one</a>.</p>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table table--items">
+      <thead>
+        <tr>
+          <th class="order">Order</th>
+          <% col.columns.forEach((c) => { %><th><%= fieldLabel(c) %></th><% }) %>
+          <th>Status</th>
+          <th class="actions"><span class="sr">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach((item, i) => { %>
+          <tr id="item-<%= item.id %>" class="<%= item.visible ? '' : 'is-hidden' %>">
+            <td class="order">
+              <form method="post" action="/admin/<%= col.key %>/<%= item.id %>/move"><input type="hidden" name="dir" value="up"><button class="iconbtn" type="submit" <%= i === 0 ? 'disabled' : '' %> aria-label="Move up">↑</button></form>
+              <form method="post" action="/admin/<%= col.key %>/<%= item.id %>/move"><input type="hidden" name="dir" value="down"><button class="iconbtn" type="submit" <%= i === items.length - 1 ? 'disabled' : '' %> aria-label="Move down">↓</button></form>
+            </td>
+            <% col.columns.forEach((c, ci) => { %>
+              <td data-label="<%= fieldLabel(c) %>"><% if (ci === 0) { %><a href="/admin/<%= col.key %>/<%= item.id %>/edit" class="strong"><%= item[c] %></a><% } else { %><%= item[c] || '—' %><% } %></td>
+            <% }) %>
+            <td data-label="Status">
+              <form method="post" action="/admin/<%= col.key %>/<%= item.id %>/toggle">
+                <button class="chip <%= item.visible ? 'chip--on' : 'chip--off' %>" type="submit" title="Click to <%= item.visible ? 'hide' : 'show' %>"><%= item.visible ? 'Visible' : 'Hidden' %></button>
+              </form>
+            </td>
+            <td class="actions">
+              <a class="btn btn--ghost btn--sm" href="/admin/<%= col.key %>/<%= item.id %>/edit">Edit</a>
+              <form method="post" action="/admin/<%= col.key %>/<%= item.id %>/delete" data-confirm="Delete this <%= col.singular.toLowerCase() %>? This can't be undone.">
+                <button class="btn btn--danger btn--sm" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</section>
+<%- include('_bottom') %>

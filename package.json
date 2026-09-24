@@ -1,0 +1,25 @@
+{
+  "name": "abdulrahman-cv-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal CV website with admin panel for Abdulrahman El-Saeed",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.2",
+    "dotenv": "^18.0.3",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "helmet": "^8.3.0",
+    "multer": "^2.4.0",
+    "mysql2": "^3.24.4",
+    "nodemailer": "^10.0.10"
+  }
+}

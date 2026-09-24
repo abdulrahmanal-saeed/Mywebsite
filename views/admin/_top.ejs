@@ -1,0 +1,48 @@
+<%
+  const nav = [
+    { href: '/admin', label: 'Dashboard', match: (p) => p === '/' },
+    { href: '/admin/settings', label: 'Profile & settings', match: (p) => p.startsWith('/settings') },
+  ].concat(
+    Object.entries(collections).map(([key, c]) => ({ href: `/admin/${key}`, label: c.title, match: (p) => p.split('/')[1] === key }))
+  ).concat([
+    { href: '/admin/messages', label: 'Messages', badge: unread, match: (p) => p.startsWith('/messages') },
+    { href: '/admin/account', label: 'Account', match: (p) => p.startsWith('/account') },
+  ]);
+%><!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title><%= title %> · Admin</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+<body class="admin">
+  <aside class="side" id="side">
+    <a class="side__brand" href="/admin"><span class="side__mark">AE</span> Admin panel</a>
+    <nav class="side__nav" aria-label="Admin">
+      <% nav.forEach((n) => { %>
+        <a href="<%= n.href %>" class="<%= n.match(path) ? 'is-active' : '' %>"<%- n.match(path) ? ' aria-current="page"' : '' %>>
+          <span><%= n.label %></span>
+          <% if (n.badge) { %><span class="badge"><%= n.badge %></span><% } %>
+        </a>
+      <% }) %>
+    </nav>
+    <div class="side__foot">
+      <a href="/" target="_blank" rel="noopener">View website ↗</a>
+      <form method="post" action="/admin/logout"><button type="submit" class="linkbtn">Log out</button></form>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" type="button" data-toggle="side" aria-controls="side" aria-expanded="false">☰ Menu</button>
+      <h1><%= title %></h1>
+      <% if (typeof actions !== 'undefined') { %><div class="topbar__actions"><%- actions %></div><% } %>
+    </header>
+    <% if (notice) { %>
+      <p class="notice<%= notice.startsWith('Error') ? ' notice--error' : '' %>" role="status"><%= notice %></p>
+    <% } %>

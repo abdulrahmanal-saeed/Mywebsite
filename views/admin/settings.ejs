@@ -1,0 +1,74 @@
+<%- include('_top', { title: 'Profile & settings' }) %>
+<%
+  const photo = s.photo_asset ? `/media/${s.photo_asset}` : '/img/profile.jpg';
+  const field = (name, label, opts = {}) => ({ name, label, ...opts });
+  const flag = (name) => s[name] === '1' ? 'checked' : '';
+%>
+<form method="post" action="/admin/settings" enctype="multipart/form-data" class="stack">
+  <section class="panel">
+    <h2>Profile</h2>
+    <div class="grid-2">
+      <label>Full name<input name="full_name" value="<%= s.full_name %>" required></label>
+      <label>Location<input name="location" value="<%= s.location %>"></label>
+    </div>
+    <label>Headline <span class="help">Shown under your name, e.g. your target roles.</span><input name="headline" value="<%= s.headline %>"></label>
+    <label>Short intro <span class="help">One or two sentences in the hero section.</span><textarea name="tagline" rows="3"><%= s.tagline %></textarea></label>
+    <label>Professional summary <span class="help">Leave an empty line between paragraphs.</span><textarea name="summary" rows="9"><%= s.summary %></textarea></label>
+    <div class="grid-2">
+      <label class="check"><input type="checkbox" name="open_to_work" value="1" <%= flag('open_to_work') %>> Show "open to opportunities" badge</label>
+      <label>Badge text<input name="availability" value="<%= s.availability %>"></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Photo & CV file</h2>
+    <div class="grid-2">
+      <div class="upload">
+        <img src="<%= photo %>" alt="Current profile photo" class="upload__preview" data-preview="photo">
+        <label>Profile photo <span class="help">JPG, PNG or WebP, max 8 MB. A portrait (vertical) photo looks best.</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-preview-input="photo"></label>
+        <% if (s.photo_asset) { %><label class="check"><input type="checkbox" name="remove_photo" value="1"> Use the original photo instead</label><% } %>
+      </div>
+      <div class="upload">
+        <div class="upload__file">
+          <strong>CV (PDF)</strong>
+          <span class="muted small"><%= s.cv_asset ? 'Your uploaded CV is live.' : 'Using the CV bundled with the website.' %></span>
+          <a class="small" href="/cv?view=1" target="_blank" rel="noopener">Open current CV ↗</a>
+        </div>
+        <label>Upload new CV <span class="help">PDF only, max 8 MB. Replaces the file behind every "Download CV" button.</span><input type="file" name="cv" accept="application/pdf"></label>
+        <% if (s.cv_asset) { %><label class="check"><input type="checkbox" name="remove_cv" value="1"> Go back to the original CV file</label><% } %>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Contact details</h2>
+    <div class="grid-2">
+      <label>Email<input type="email" name="email" value="<%= s.email %>"></label>
+      <label>Phone<input name="phone" value="<%= s.phone %>"></label>
+      <label>WhatsApp number <span class="help">Country code + number, digits only, e.g. 971504085666.</span><input name="whatsapp" value="<%= s.whatsapp %>" inputmode="numeric"></label>
+      <label>LinkedIn URL<input name="linkedin" value="<%= s.linkedin %>"></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Sections on the website</h2>
+    <p class="muted small">Untick a section to hide it without deleting its content.</p>
+    <div class="checks">
+      <label class="check"><input type="checkbox" name="show_achievements" value="1" <%= flag('show_achievements') %>> Achievements</label>
+      <label class="check"><input type="checkbox" name="show_experience" value="1" <%= flag('show_experience') %>> Experience</label>
+      <label class="check"><input type="checkbox" name="show_skills" value="1" <%= flag('show_skills') %>> Skills</label>
+      <label class="check"><input type="checkbox" name="show_education" value="1" <%= flag('show_education') %>> Education</label>
+      <label class="check"><input type="checkbox" name="show_certifications" value="1" <%= flag('show_certifications') %>> Certifications</label>
+      <label class="check"><input type="checkbox" name="show_contact" value="1" <%= flag('show_contact') %>> Contact form</label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Search engines & link previews</h2>
+    <label>Page title<input name="seo_title" value="<%= s.seo_title %>" maxlength="120"></label>
+    <label>Description <span class="help">Shown on Google and when the link is shared on LinkedIn / WhatsApp.</span><textarea name="seo_description" rows="3" maxlength="300"><%= s.seo_description %></textarea></label>
+  </section>
+
+  <div class="savebar"><button class="btn btn--primary" type="submit">Save changes</button><a href="/" target="_blank" rel="noopener" class="small">Preview website ↗</a></div>
+</form>
+<%- include('_bottom') %>

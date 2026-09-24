@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin login</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+<body class="login">
+  <main class="login__card">
+    <span class="side__mark side__mark--lg">AE</span>
+    <h1>Admin login</h1>
+    <p class="muted">Manage everything on your website.</p>
+    <% if (!hasAdmin) { %>
+      <p class="notice notice--error">No admin account yet. Set <code>ADMIN_EMAIL</code> and <code>ADMIN_PASSWORD</code> in your hosting environment variables, then restart the app.</p>
+    <% } %>
+    <% if (error) { %><p class="notice notice--error" role="alert"><%= error %></p><% } %>
+    <form method="post" action="/admin/login" class="stack">
+      <label>Email<input type="email" name="email" value="<%= email || '' %>" autocomplete="username" required autofocus></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="btn btn--primary" type="submit">Log in</button>
+    </form>
+    <a class="muted small" href="/">← Back to website</a>
+  </main>
+</body>
+</html>

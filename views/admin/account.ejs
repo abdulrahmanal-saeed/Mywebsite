@@ -1,0 +1,13 @@
+<%- include('_top', { title: 'Account' }) %>
+<form method="post" action="/admin/account" class="stack narrow">
+  <section class="panel">
+    <h2>Change password</h2>
+    <p class="muted small">Logged in as <strong><%= user.email %></strong>.</p>
+    <% if (error) { %><p class="notice notice--error" role="alert"><%= error %></p><% } %>
+    <label>Current password<input type="password" name="current" autocomplete="current-password" required></label>
+    <label>New password <span class="help">At least 8 characters.</span><input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+    <label>Repeat new password<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
+  </section>
+  <div class="savebar"><button class="btn btn--primary" type="submit">Change password</button></div>
+</form>
+<%- include('_bottom') %>

@@ -1,0 +1,113 @@
+<%- include('_top', { title: 'Dashboard' }) %>
+<%
+  const series = stats.series;
+  const W = 720, H = 220, padL = 34, padB = 26, padT = 12, padR = 8;
+  const max = Math.max(4, ...series.map((d) => d.views));
+  const step = Math.pow(10, Math.floor(Math.log10(max)));
+  const tick = [1, 2, 5, 10].map((m) => m * step).find((t) => max / t <= 4) || step * 10;
+  const top = Math.ceil(max / tick) * tick;
+  const ticks = []; for (let v = 0; v <= top; v += tick) ticks.push(v);
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const slot = plotW / series.length, barW = Math.max(4, slot - 4);
+  const y = (v) => padT + plotH - (v / top) * plotH;
+  const fmtDay = (d) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const devTotal = stats.devices.reduce((a, d) => a + Number(d.n), 0);
+%>
+<section class="tiles" aria-label="Visitor summary">
+  <div class="tile"><p class="tile__label">Visitors today</p><p class="tile__value"><%= stats.today.visitors %></p><p class="tile__sub"><%= stats.today.views %> page views</p></div>
+  <div class="tile"><p class="tile__label">Visitors · last 7 days</p><p class="tile__value"><%= stats.week.visitors %></p><p class="tile__sub"><%= stats.week.views %> page views</p></div>
+  <div class="tile"><p class="tile__label">Visitors · last 30 days</p><p class="tile__value"><%= stats.month.visitors %></p><p class="tile__sub"><%= stats.month.views %> page views</p></div>
+  <div class="tile"><p class="tile__label">CV downloads · 30 days</p><p class="tile__value"><%= stats.month.downloads %></p><p class="tile__sub"><%= stats.allTime.downloads %> all time</p></div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <h2>Page views per day <span class="muted">· last 30 days</span></h2>
+    <button class="linkbtn small" type="button" data-toggle-table="views-table">Show as table</button>
+  </div>
+  <div class="chart" data-chart>
+    <svg viewBox="0 0 <%= W %> <%= H %>" role="img" aria-label="Bar chart of page views per day for the last 30 days, peak <%= Math.max(...series.map((d) => d.views)) %> views">
+      <% ticks.forEach((t) => { %>
+        <line class="chart__grid" x1="<%= padL %>" x2="<%= W - padR %>" y1="<%= y(t) %>" y2="<%= y(t) %>"></line>
+        <text class="chart__axis" x="<%= padL - 8 %>" y="<%= y(t) + 4 %>" text-anchor="end"><%= t %></text>
+      <% }) %>
+      <% series.forEach((d, i) => {
+           const x = padL + i * slot + (slot - barW) / 2;
+           const h = Math.max(0, y(0) - y(d.views));
+           const r = Math.min(4, barW / 2, h);
+      %>
+        <g class="chart__col" data-tip="<%= fmtDay(d.day) %>|<%= d.views %> views · <%= d.visitors %> visitors · <%= d.downloads %> CV downloads">
+          <rect class="chart__hit" x="<%= padL + i * slot %>" y="<%= padT %>" width="<%= slot %>" height="<%= plotH %>"></rect>
+          <% if (h > 0) { %>
+            <path class="chart__bar" d="M<%= x %>,<%= y(0) %> V<%= y(0) - h + r %> Q<%= x %>,<%= y(0) - h %> <%= x + r %>,<%= y(0) - h %> H<%= x + barW - r %> Q<%= x + barW %>,<%= y(0) - h %> <%= x + barW %>,<%= y(0) - h + r %> V<%= y(0) %> Z"></path>
+          <% } %>
+        </g>
+        <% if (i % 7 === 1 || i === series.length - 1) { %>
+          <text class="chart__axis" x="<%= padL + i * slot + slot / 2 %>" y="<%= H - 6 %>" text-anchor="middle"><%= i === series.length - 1 ? 'Today' : fmtDay(d.day) %></text>
+        <% } %>
+      <% }) %>
+      <line class="chart__base" x1="<%= padL %>" x2="<%= W - padR %>" y1="<%= y(0) %>" y2="<%= y(0) %>"></line>
+    </svg>
+    <div class="chart__tip" role="tooltip" hidden></div>
+  </div>
+  <div class="table-wrap" id="views-table" hidden>
+    <table class="table">
+      <thead><tr><th>Day</th><th class="num">Views</th><th class="num">Visitors</th><th class="num">CV downloads</th></tr></thead>
+      <tbody>
+        <% series.slice().reverse().forEach((d) => { %>
+          <tr><td><%= fmtDay(d.day) %></td><td class="num"><%= d.views %></td><td class="num"><%= d.visitors %></td><td class="num"><%= d.downloads %></td></tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="grid-2">
+  <section class="panel">
+    <h2>Where visitors come from <span class="muted">· 30 days</span></h2>
+    <% if (!stats.referrers.length) { %>
+      <p class="muted">No referring websites yet. Direct visits (typed link, QR code, PDF link) aren't listed here.</p>
+    <% } else { %>
+      <table class="table">
+        <tbody>
+          <% stats.referrers.forEach((r) => { %><tr><td><%= r.referrer %></td><td class="num"><%= r.n %></td></tr><% }) %>
+        </tbody>
+      </table>
+    <% } %>
+    <% if (devTotal) { %>
+      <p class="muted small mt">Devices: <% stats.devices.forEach((d, i) => { %><%= i ? ' · ' : '' %><%= d.device %> <%= Math.round((d.n / devTotal) * 100) %>%<% }) %></p>
+    <% } %>
+  </section>
+
+  <section class="panel">
+    <div class="panel__head">
+      <h2>Latest messages</h2>
+      <a class="small" href="/admin/messages">All messages →</a>
+    </div>
+    <% if (!mailConfigured) { %>
+      <p class="notice notice--warn small">Email notifications are off. Messages are saved here. Add the SMTP settings on Hostinger to also get them by email (see README).</p>
+    <% } %>
+    <% if (!recent.length) { %>
+      <p class="muted">No messages yet.</p>
+    <% } else { %>
+      <ul class="msglist">
+        <% recent.forEach((m) => { %>
+          <li class="<%= m.is_read ? '' : 'is-unread' %>">
+            <a href="/admin/messages/<%= m.id %>"><strong><%= m.name %></strong><span><%= m.subject || 'No subject' %></span><time><%= m.created_at.slice(0, 16) %></time></a>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>Website content</h2>
+  <div class="quick">
+    <a href="/admin/settings" class="quick__item"><strong>Profile & settings</strong><span>Name, photo, CV file, contact</span></a>
+    <% counts.forEach((c) => { %>
+      <a href="/admin/<%= c.key %>" class="quick__item"><strong><%= c.title %></strong><span><%= c.n %> items</span></a>
+    <% }) %>
+  </div>
+</section>
+<%- include('_bottom') %>

@@ -1,0 +1,18 @@
+<%- include('_top', { title: 'Message from ' + message.name }) %>
+<section class="panel">
+  <dl class="meta">
+    <div><dt>From</dt><dd><%= message.name %></dd></div>
+    <div><dt>Email</dt><dd><a href="mailto:<%= message.email %>"><%= message.email %></a></dd></div>
+    <% if (message.company) { %><div><dt>Company</dt><dd><%= message.company %></dd></div><% } %>
+    <% if (message.subject) { %><div><dt>Subject</dt><dd><%= message.subject %></dd></div><% } %>
+    <div><dt>Received</dt><dd><%= message.created_at %><%= message.emailed ? ' · also sent to your email' : '' %></dd></div>
+  </dl>
+  <div class="msgbody"><%= message.body %></div>
+  <div class="savebar">
+    <a class="btn btn--primary" href="mailto:<%= message.email %>?subject=<%= encodeURIComponent('Re: ' + (message.subject || 'Your message')) %>">Reply by email</a>
+    <form method="post" action="/admin/messages/<%= message.id %>/unread"><button class="btn btn--ghost" type="submit">Mark as unread</button></form>
+    <form method="post" action="/admin/messages/<%= message.id %>/delete" data-confirm="Delete this message?"><button class="btn btn--danger" type="submit">Delete</button></form>
+    <a class="small" href="/admin/messages">← All messages</a>
+  </div>
+</section>
+<%- include('_bottom') %>
