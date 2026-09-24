@@ -42,7 +42,7 @@ In the Node.js app settings → **Environment variables**, add:
 |---|---|
 | `NODE_ENV` | `production` |
 | `SITE_URL` | `https://abdulrahmanalsaeed.com` |
-| `DB_HOST` | `localhost` (or the MySQL host shown in hPanel) |
+| `DB_HOST` | `127.0.0.1` (or the MySQL host shown in hPanel) |
 | `DB_NAME` | database name from step 1 |
 | `DB_USER` | database user from step 1 |
 | `DB_PASSWORD` | database password |

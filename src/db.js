@@ -5,7 +5,8 @@ let pool;
 function getPool() {
   if (!pool) {
     pool = mysql.createPool({
-      host: process.env.DB_HOST || 'localhost',
+      // "localhost" can resolve to IPv6 (::1) where MySQL isn't listening, so use 127.0.0.1.
+      host: !process.env.DB_HOST || process.env.DB_HOST === 'localhost' ? '127.0.0.1' : process.env.DB_HOST,
       port: Number(process.env.DB_PORT || 3306),
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
@@ -14,6 +15,7 @@ function getPool() {
       connectionLimit: 5,
       charset: 'utf8mb4',
       dateStrings: true,
+      connectTimeout: 10000,
     });
   }
   return pool;
