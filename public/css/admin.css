@@ -78,6 +78,7 @@ textarea { resize: vertical; }
 input[type=file] { font: inherit; font-weight: 400; font-size: 14px; }
 .check { display: flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; }
 .check input { width: 18px; height: 18px; accent-color: var(--navy); }
+.fieldlabel { font-weight: 600; font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
 .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
 .upload { display: grid; gap: 12px; align-content: start; padding: 16px; border: 1px dashed var(--line); border-radius: 10px; }
 .upload__preview { width: 140px; height: 140px; object-fit: cover; border-radius: 14px; border: 1px solid var(--line); }

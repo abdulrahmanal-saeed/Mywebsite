@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/site.css?v=2">
+  <link rel="stylesheet" href="/css/site.css?v=3">
   <script type="application/ld+json"><%- JSON.stringify(jsonLd).replace(/</g, '\\u003c') %></script>
 </head>
 <body>
@@ -233,20 +233,22 @@
     <% } %>
 
     <% if (on('show_contact')) { %>
+    <% const showForm = on('show_contact_form'); %>
     <section class="section contact" id="contact">
-      <div class="wrap contact__grid">
+      <div class="wrap contact__grid<%= showForm ? '' : ' contact__grid--single' %>">
         <div class="contact__intro">
-          <p class="eyebrow eyebrow--light">Contact</p>
-          <h2 class="section__title">Let's talk about how I can help your team</h2>
-          <p class="contact__lead">Hiring for account management, client relations or business development? Send a message or reach me directly.</p>
+          <% if (s.contact_eyebrow) { %><p class="eyebrow eyebrow--light"><%= s.contact_eyebrow %></p><% } %>
+          <% if (s.contact_title) { %><h2 class="section__title"><%= s.contact_title %></h2><% } %>
+          <% if (s.contact_lead) { %><p class="contact__lead"><%= s.contact_lead %></p><% } %>
           <ul class="contact__list">
-            <% if (s.email) { %><li><a href="mailto:<%= s.email %>"><%- icon('mail') %><span><small>Email</small><%= s.email %></span></a></li><% } %>
-            <% if (s.phone) { %><li><a href="<%= telHref %>"><%- icon('phone') %><span><small>Phone</small><%= s.phone %></span></a></li><% } %>
-            <% if (waHref) { %><li><a href="<%= waHref %>" target="_blank" rel="noopener"><%- icon('whatsapp') %><span><small>WhatsApp</small>Chat with me</span></a></li><% } %>
-            <% if (s.linkedin) { %><li><a href="<%= s.linkedin %>" target="_blank" rel="noopener"><%- icon('linkedin') %><span><small>LinkedIn</small>View profile</span></a></li><% } %>
+            <% if (s.email && on('show_contact_email')) { %><li><a href="mailto:<%= s.email %>"><%- icon('mail') %><span><small>Email</small><%= s.email %></span></a></li><% } %>
+            <% if (s.phone && on('show_contact_phone')) { %><li><a href="<%= telHref %>"><%- icon('phone') %><span><small>Phone</small><%= s.phone %></span></a></li><% } %>
+            <% if (waHref && on('show_contact_whatsapp')) { %><li><a href="<%= waHref %>" target="_blank" rel="noopener"><%- icon('whatsapp') %><span><small>WhatsApp</small><%= s.contact_whatsapp_label || s.phone %></span></a></li><% } %>
+            <% if (s.linkedin && on('show_contact_linkedin')) { %><li><a href="<%= s.linkedin %>" target="_blank" rel="noopener"><%- icon('linkedin') %><span><small>LinkedIn</small><%= s.contact_linkedin_label || 'View profile' %></span></a></li><% } %>
           </ul>
         </div>
-        <form class="form" method="post" action="/contact" id="contact-form" novalidate>
+        <% if (showForm) { %>
+        <form class="form" method="post" action="/contact" id="contact-form" data-success="<%= s.contact_success %>" novalidate>
           <div class="form__row">
             <label>Your name<input name="name" autocomplete="name" required maxlength="190"></label>
             <label>Email<input name="email" type="email" autocomplete="email" required maxlength="190"></label>
@@ -257,9 +259,10 @@
           </div>
           <label>Message<textarea name="message" rows="5" required maxlength="5000"></textarea></label>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-          <button class="btn btn--gold" type="submit">Send message <%- icon('arrow', 16) %></button>
-          <p class="form__status<%= sent ? ' is-ok' : '' %><%= contactError ? ' is-error' : '' %>" role="status" aria-live="polite"><%= sent ? 'Thank you! Your message has been sent. I will get back to you soon.' : (contactError || '') %></p>
+          <button class="btn btn--gold" type="submit"><%= s.contact_button || 'Send message' %> <%- icon('arrow', 16) %></button>
+          <p class="form__status<%= sent ? ' is-ok' : '' %><%= contactError ? ' is-error' : '' %>" role="status" aria-live="polite"><%= sent ? s.contact_success : (contactError || '') %></p>
         </form>
+        <% } %>
       </div>
     </section>
     <% } %>
@@ -267,19 +270,19 @@
 
   <footer class="footer">
     <div class="wrap footer__inner">
-      <p>© <%= new Date().getFullYear() %> <%= s.full_name %> · <%= s.location %></p>
-      <p class="footer__links">
-        <a href="/cv">Download CV</a>
-        <% if (s.linkedin) { %><a href="<%= s.linkedin %>" target="_blank" rel="noopener">LinkedIn</a><% } %>
-        <% if (s.email) { %><a href="mailto:<%= s.email %>">Email</a><% } %>
-      </p>
+      <% if (footerText) { %><p><%= footerText %></p><% } %>
+      <% if (footerLinks.length) { %>
+        <p class="footer__links">
+          <% footerLinks.forEach((l) => { %><a href="<%= l.url %>"<%- l.external ? ' target="_blank" rel="noopener"' : '' %>><%= l.label %></a><% }) %>
+        </p>
+      <% } %>
     </div>
   </footer>
 
-  <% if (waHref) { %>
+  <% if (waHref && on('show_whatsapp_button')) { %>
     <a class="wa-float" href="<%= waHref %>" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><%- icon('whatsapp', 26) %></a>
   <% } %>
 
-  <script src="/js/site.js?v=1" defer></script>
+  <script src="/js/site.js?v=2" defer></script>
 </body>
 </html>

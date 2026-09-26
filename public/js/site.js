@@ -50,7 +50,7 @@
       .then(function (res) {
         if (res.ok) {
           form.reset();
-          show('Thank you! Your message has been sent. I will get back to you soon.', true);
+          show(form.getAttribute('data-success') || 'Thank you! Your message has been sent.', true);
         } else {
           show(res.error || 'Something went wrong. Please try again.', false);
         }

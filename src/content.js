@@ -31,6 +31,37 @@ function paragraphs(text) {
     .filter(Boolean);
 }
 
+// Replace {year}, {name}, {email}... in admin-written text.
+function fillPlaceholders(text, s) {
+  const values = {
+    year: String(new Date().getFullYear()),
+    name: s.full_name,
+    location: s.location,
+    email: s.email,
+    phone: s.phone,
+    linkedin: s.linkedin,
+    whatsapp: s.whatsapp ? `https://wa.me/${s.whatsapp}` : '',
+  };
+  return String(text || '').replace(/\{(\w+)\}/g, (m, k) => (k in values ? values[k] || '' : m));
+}
+
+const SAFE_URL = /^(https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i;
+
+// Footer links are written one per line as "Label | URL".
+function footerLinks(s) {
+  return lines(s.footer_links)
+    .map((line) => {
+      const i = line.indexOf('|');
+      if (i < 0) return null;
+      const label = line.slice(0, i).trim();
+      let url = fillPlaceholders(line.slice(i + 1).trim(), s);
+      if (/^[\w.-]+\.[a-z]{2,}(\/|$)/i.test(url)) url = `https://${url}`;
+      if (!label || !SAFE_URL.test(url) || /^(mailto:|tel:)?$/i.test(url)) return null;
+      return { label, url, external: /^https?:/i.test(url) };
+    })
+    .filter(Boolean);
+}
+
 async function getPageData() {
   const order = 'WHERE visible = 1 ORDER BY sort_order, id';
   const [settings, experiences, achievements, skills, education, certifications] = await Promise.all([
@@ -57,6 +88,8 @@ async function getPageData() {
     education,
     certifications,
     summaryParagraphs: paragraphs(settings.summary),
+    footerText: fillPlaceholders(settings.footer_text, settings),
+    footerLinks: footerLinks(settings),
   };
 }
 

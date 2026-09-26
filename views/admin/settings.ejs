@@ -75,8 +75,40 @@
       <label class="check"><input type="checkbox" name="show_skills" value="1" <%= flag('show_skills') %>> Skills</label>
       <label class="check"><input type="checkbox" name="show_education" value="1" <%= flag('show_education') %>> Education</label>
       <label class="check"><input type="checkbox" name="show_certifications" value="1" <%= flag('show_certifications') %>> Certifications</label>
-      <label class="check"><input type="checkbox" name="show_contact" value="1" <%= flag('show_contact') %>> Contact form</label>
+      <label class="check"><input type="checkbox" name="show_contact" value="1" <%= flag('show_contact') %>> Contact section</label>
     </div>
+  </section>
+
+  <section class="panel">
+    <h2>Contact section</h2>
+    <div class="grid-2">
+      <label>Small label above the title<input name="contact_eyebrow" value="<%= s.contact_eyebrow %>"></label>
+      <label>Title<input name="contact_title" value="<%= s.contact_title %>"></label>
+    </div>
+    <label>Intro text<textarea name="contact_lead" rows="3"><%= s.contact_lead %></textarea></label>
+    <div>
+      <p class="fieldlabel">Show in the contact section</p>
+      <div class="checks">
+        <label class="check"><input type="checkbox" name="show_contact_email" value="1" <%= flag('show_contact_email') %>> Email</label>
+        <label class="check"><input type="checkbox" name="show_contact_phone" value="1" <%= flag('show_contact_phone') %>> Phone</label>
+        <label class="check"><input type="checkbox" name="show_contact_whatsapp" value="1" <%= flag('show_contact_whatsapp') %>> WhatsApp</label>
+        <label class="check"><input type="checkbox" name="show_contact_linkedin" value="1" <%= flag('show_contact_linkedin') %>> LinkedIn</label>
+        <label class="check"><input type="checkbox" name="show_contact_form" value="1" <%= flag('show_contact_form') %>> Message form</label>
+        <label class="check"><input type="checkbox" name="show_whatsapp_button" value="1" <%= flag('show_whatsapp_button') %>> Floating WhatsApp button</label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <label>WhatsApp card text<input name="contact_whatsapp_label" value="<%= s.contact_whatsapp_label %>"></label>
+      <label>LinkedIn card text<input name="contact_linkedin_label" value="<%= s.contact_linkedin_label %>"></label>
+      <label>Form button text<input name="contact_button" value="<%= s.contact_button %>"></label>
+      <label>Message after sending<input name="contact_success" value="<%= s.contact_success %>"></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Footer</h2>
+    <label>Footer text <span class="help">You can use {year}, {name} and {location}; they fill in automatically.</span><input name="footer_text" value="<%= s.footer_text %>"></label>
+    <label>Footer links <span class="help">One link per line as <code>Label | link</code>. You can use {linkedin}, {email}, {phone} and {whatsapp}. Example: <code>Email | mailto:{email}</code>. Leave empty for no links.</span><textarea name="footer_links" rows="5"><%= s.footer_links %></textarea></label>
   </section>
 
   <section class="panel">

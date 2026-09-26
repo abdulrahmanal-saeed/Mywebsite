@@ -124,10 +124,13 @@ router.get('/', async (req, res) => {
 const SETTING_FIELDS = [
   'full_name', 'headline', 'tagline', 'location', 'email', 'phone', 'whatsapp', 'linkedin',
   'availability', 'summary', 'seo_title', 'seo_description',
+  'contact_eyebrow', 'contact_title', 'contact_lead', 'contact_button', 'contact_success',
+  'contact_whatsapp_label', 'contact_linkedin_label', 'footer_text', 'footer_links',
 ];
 const SETTING_FLAGS = [
   'open_to_work', 'show_achievements', 'show_experience', 'show_skills', 'show_education',
-  'show_certifications', 'show_contact',
+  'show_certifications', 'show_contact', 'show_contact_form', 'show_contact_email', 'show_contact_phone',
+  'show_contact_whatsapp', 'show_contact_linkedin', 'show_whatsapp_button',
 ];
 
 router.get('/settings', async (req, res) => {

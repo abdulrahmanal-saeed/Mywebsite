@@ -201,6 +201,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .contact .section__title { color: #fff; }
 .eyebrow--light { color: #d9bd8c; }
 .contact__grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: start; }
+.contact__grid--single { grid-template-columns: 1fr; max-width: 880px; }
+.contact__grid--single .contact__list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
 .contact__lead { color: rgba(255, 255, 255, .75); font-size: 17px; margin-top: -14px; }
 .contact__list { display: grid; gap: 10px; margin-top: 28px; }
 .contact__list a {
